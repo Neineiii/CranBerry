@@ -9,8 +9,12 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
@@ -36,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private MapView mapView;
     private BaiduMap baiduMap;
     private boolean isFirstLoc = true;
+    private DrawerLayout mDrawerLayout;
 
     private MyOrientationListener myOrientationListener;
 
@@ -52,6 +57,22 @@ public class MainActivity extends AppCompatActivity {
         // 初始化地图并获得mapView实例
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            /**
+             * 显示导航按钮
+             * 默认图标叫HomeAsUp，是一个返回箭头
+             * id为R.id.home
+             * 功能是返回上一个活动
+             */
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            // 对默认图标进行更改
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        }
+
         mapView = (MapView) findViewById(R.id.bmapView);
 
 
@@ -81,6 +102,10 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED){
             permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
+        if(ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.BODY_SENSORS)!= PackageManager.PERMISSION_GRANTED){
+            permissionList.add(Manifest.permission.BODY_SENSORS);
+        }
         if(!permissionList.isEmpty()){
             String[] permissions = permissionList.toArray(new String[permissionList.size()]);
             // 获得用户权限，得到结果后回调onRequestPermissionsResult()方法
@@ -89,6 +114,22 @@ public class MainActivity extends AppCompatActivity {
             requestLocation();
         }
 
+    }
+
+    /**
+     * 修改图标功能
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(Gravity.START);
+                break;
+            default:
+        }
+        return true;
     }
 
     /**
