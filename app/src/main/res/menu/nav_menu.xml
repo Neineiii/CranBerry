@@ -17,4 +17,8 @@
         android:id="@+id/nav_congestion"
         android:icon="@drawable/ic_congestion"
         android:title="Congestion"/>
+    <item
+        android:id="@+id/nav_camera"
+        android:icon="@drawable/ic_camera"
+        android:title="Camera"/>
 </menu>
