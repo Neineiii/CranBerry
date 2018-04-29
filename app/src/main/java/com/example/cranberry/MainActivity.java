@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +54,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar,menu);
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -61,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null){
@@ -75,16 +83,24 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         }
 
+
         NavigationView navView= (NavigationView) findViewById(R.id.nav_view);
-        navView.setCheckedItem(R.id.nav_routes);
         navView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                mDrawerLayout.closeDrawers();
-                return false;
+                switch(item.getItemId()){
+                    case R.id.nav_camera:
+                        Toast.makeText(MainActivity.this, "Camera",Toast.LENGTH_SHORT).
+                                show();
+                        break;
+                    default:
+                }
+                return true;
             }
         });
+
+
         mapView = (MapView) findViewById(R.id.bmapView);
 
         // 获得BaiduMap实例
@@ -92,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         baiduMap.setMyLocationEnabled(true);
 
         // 对定位图标进行配置
+
         MyLocationConfiguration myLocationConfiguration =
                 new MyLocationConfiguration(
                         MyLocationConfiguration.LocationMode.FOLLOWING, true,
@@ -136,6 +153,9 @@ public class MainActivity extends AppCompatActivity {
         switch(item.getItemId()){
             case android.R.id.home:
                 mDrawerLayout.openDrawer(Gravity.START);
+                break;
+            case R.id.search:
+                Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show();
                 break;
             default:
         }
